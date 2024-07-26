@@ -1,61 +1,40 @@
-
 <# Collect any registry run keys on the system for the HKCU and HKLM hives. #>
-
 function getRunKeys()
 {
-    Write-Host 'Collecting HKCU Run keys...'
-    
+    Write-Host 'Collecting HKCU Run keys...'   
     Get-Item -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run'
-    
     Write-Host 'Collecting HKCU RunOnce keys...'
-    
     Get-Item -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
-    
     Write-Host 'Collecting HKLM Run keys...'
-    
     Get-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run'
-    
     Write-Host 'Collecting HKLM RunOnce keys...'
-    
     Get-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'
-    
 }
 
 <# Get current running services. #>
-
 function getCurrentServices()
 {
     Write-Host 'Collecting running services...'
-    
     Get-Service | Where-Object {$_.Status -eq 'Running'} | Format-List -property Name, DisplayName,ServiceName,ServiceType,StartType
 }
 
 <# Get running process, including process owner. Must be run from an elevated shell. #>
-
 function getRunningProcesses()
 {
     $ErrorActionPreference = 'silentlycontinue'
-    
     Write-Host 'Collecting running processes...'
-    
     Get-Process -IncludeUserName
 }
 
 <# Enumerate network connections. #>
-
 function getNetworkConnections()
 {
- 
-    Write-Host 'Collecting network connections...'
-    
-    netstat -abof | format-table -autosize
-
-    #Get-NetTCPConnection |  Format-Table LocalAddress, LocalPort, RemoteAddress, RemotePort, OwningProcessName
-    
+    Write-Host 'Collecting network connections...'   
+    netstat -abof | format-table -autosize  
 }
 
-<# Get all scheduled tasks. #>
 
+<# Get all scheduled tasks. #>
 function getScheduledTasks()
 {
     Write-Host 'Collecting scheduled tasks...'
@@ -64,30 +43,23 @@ function getScheduledTasks()
 }
 
 <# Print system hosts file. #>
-
 function getHostsFile()
 {
     Write-Host 'Collecting hosts file content...'
-    
     Get-Content C:\Windows\System32\Drivers\etc\hosts
 }
 
 
 <# Get startup objects #>
-
 function getStartupObjects()
 {
     $user = Read-Host 'Provide account/user name:'
-
     Write-Host 'Collecting startup objects for user $user...'
-
     $directory = "C:\Users\$user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
-
     Get-ChildItem $directory
 }
 
 <# Show menu. #>
-
 function Show-Menu
 {
     param (
